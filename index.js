@@ -13,7 +13,23 @@
   };
   NjqError.prototype = Object.create(NjqError.prototype);
 
-  var njq = {};
+  function wrappedEl(el) {
+    var obj = Object.create({
+      find: function(selector) {
+        var results = [];
+        for(var i = 0; i < el.length; i++) {
+          results = results.concat(el[i].querySelectorAll(selector));
+        }
+        return wrappedEl(results);
+      },
+      length: el.length
+    });
+    return obj;
+  }
+
+  var njq = function(selector) {
+    return wrappedEl(document.querySelectorAll(selector));
+  };
 
   njq.getJSON = function(string, callback) {
     var request = new XMLHttpRequest();
@@ -34,7 +50,7 @@
     };
 
     request.send();
-  }
+  };
 
   njq.ajax = function(options) {
     var request = new XMLHttpRequest();

@@ -1,13 +1,11 @@
+/* globals document, window, require, describe, it */
 "use strict";
 
 var chai = require("chai");
 var expect = chai.expect;
 var njq = require("./../");
 var zock = require("zock");
-zock
-.logger(function(debug) {
-  console.log(debug)
-});
+
 var Promise = require('es6-promise').Promise; // zock needs this
 var domain = "http://www.fake.com";
 var GET = "GET";
@@ -18,7 +16,7 @@ var setGet = function(domain, path, result) {
     .base(domain)
     .get(path)
     .reply(200, result)
-    .XMLHttpRequest
+    .XMLHttpRequest;
 };
 
 var setPost = function(domain, path, result) {
@@ -26,14 +24,10 @@ var setPost = function(domain, path, result) {
     .base(domain)
     .post(path)
     .reply(200, result)
-    .XMLHttpRequest
+    .XMLHttpRequest;
 };
 
-describe("Basics", function() {
-  it("work", function() {
-    expect(true).to.be.true;
-  });
-
+describe("Ajax", function() {
   it("gets JSON", function(done) {
     var result = { test: true };
     var path = "/some/shit";
@@ -83,5 +77,27 @@ describe("Basics", function() {
       }
     });
 
+  });
+});
+
+describe("Query Elements", function() {
+  it("gets elements", function() {
+    var el = document.createElement("div");
+    el.setAttribute("id", "foo");
+    document.body.appendChild(el);
+
+    expect(njq("#foo").length).to.equal(1);
+    el.parentNode.removeChild(el);
+  });
+
+  it("gets finds elements within", function() {
+    var el = document.createElement("div");
+    var bar = document.createElement("div");
+    el.setAttribute("id", "foo");
+    bar.setAttribute("id", "bar");
+    el.appendChild(bar);
+    document.body.appendChild(el);
+
+    expect(njq("#foo").find("#bar").length).to.equal(1);
   });
 });
