@@ -84,6 +84,18 @@ foo.each(function(el) {
 });
 ```
 
+#### empty
+```javascript
+var foo = njq(".foo"); // <div class="foo">BAR</div>
+foo.empty(); // <div class="foo"></div>
+```
+
+#### html
+```javascript
+var foo = njq(".foo"); // <div class="foo">BAR</div>
+foo.html(); // BAR
+```
+
 ### Effects
 
 #### hide

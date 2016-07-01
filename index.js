@@ -15,15 +15,19 @@
 
   function wrappedEl(el) {
     var obj = Object.create({
+      get: function(index) {
+        return el[index];
+      },
+
       each: function(func) {
-        for(var i = 0; i < el.length; i++) {
-          func(el[i]);
-        }
+        Array.prototype.forEach.call(el, function(el, i) {
+          func(i, el);
+        });
       },
 
       find: function(selector) {
         var results = [];
-        this.each(function(item) {
+        this.each(function(i, item) {
           results = results.concat(item.querySelectorAll(selector));
         });
 
@@ -33,25 +37,21 @@
       length: el.length,
 
       hasClass: function(className) {
-        var ret = false;
         if (el.length === 0) {
-          return ret;
+          return false;
         }
 
-        // TODO every() here
-        this.each(function(item) {
+        return Array.prototype.every.call(el, function(item) {
           if (item.classList) {
-            ret = item.classList.contains(className);
+            return item.classList.contains(className);
           } else {
-            ret = new RegExp('(^| )' + className + '( |$)', 'gi').test(item.className);
+            return new RegExp('(^| )' + className + '( |$)', 'gi').test(item.className);
           }
         });
-
-        return ret;
       },
 
       addClass: function(className) {
-        this.each(function(item) {
+        this.each(function(i, item) {
           if (item.classList) {
             item.classList.add(className);
           } else {
@@ -63,7 +63,7 @@
       },
 
       setDisplay: function(value) {
-        this.each(function(item) {
+        this.each(function(i, item) {
           item.style.display = value;
         });
         return this;
@@ -75,8 +75,21 @@
 
       hide: function() {
         return this.setDisplay("none");
+      },
+
+      empty: function() {
+        this.each(function(i, item) {
+          item.innerHTML = '';
+        });
+
+        return this;
+      },
+
+      html: function() {
+        return this.get(0).innerHTML;
       }
     });
+
     return obj;
   }
 

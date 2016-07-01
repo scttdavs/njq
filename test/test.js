@@ -128,6 +128,28 @@ describe("Query Elements", function() {
     var newClass = njq("#foo").addClass("bar");
     expect(newClass.hasClass("bar")).to.be.true;
   });
+
+  it("empties an element", function() {
+    var el = createElement("div", "foo");
+    var bar = createElement("div", "bar");
+    el.appendChild(bar);
+    addToDocument(el);
+
+    var foo = njq("#foo");
+    expect(foo.get(0).innerHTML).to.not.be.empty;
+    foo.empty();
+    expect(foo.get(0).innerHTML).to.be.empty;
+  });
+
+  it("gets html", function() {
+    var el = createElement("div", "foo");
+    var bar = createElement("div", "bar");
+    el.appendChild(bar);
+    addToDocument(el);
+
+    var foo = njq("#foo");
+    expect(foo.html()).to.equal('<div id="bar"></div>');
+  });
 });
 
 describe("Effects", function() {
