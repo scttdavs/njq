@@ -158,6 +158,29 @@
 
       css: function(rule) {
         return getComputedStyle(this.get(0))[rule];
+      },
+
+      on: function(eventName, listener) {
+        var listenerWrapper = function(data) {
+          listener(data.detail || data);
+        }
+        this.each(function(i, item) {
+          item.addEventListener(eventName, listenerWrapper);
+        });
+
+        return this;
+      },
+
+      trigger: function(eventName, data) {
+        var newEvent;
+        if (window.CustomEvent) {
+          newEvent = new CustomEvent(eventName, { detail: data });
+        } else {
+          newEvent = document.createEvent('CustomEvent');
+          newEvent.initCustomEvent(eventName, true, true, data);
+        }
+
+        this.get(0).dispatchEvent(newEvent);
       }
     });
 

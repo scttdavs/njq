@@ -134,6 +134,24 @@ var foo = njq(".foo"); // <div class="foo" style="color: red;"></div>
 foo.css("color"); // red
 ```
 
+### Events
+
+#### on
+```javascript
+njq(".foo").on("bar", function(data) {
+  console.log(data);
+}).trigger("bar", "foobar");
+// LOG foobar
+```
+
+#### trigger
+```javascript
+njq(".foo").on("bar", function(data) {
+  console.log(data);
+}).trigger("bar", "foobar");
+// LOG foobar
+```
+
 ### Effects
 
 #### hide

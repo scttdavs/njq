@@ -10,6 +10,8 @@ var Promise = require('es6-promise').Promise; // zock needs this
 var domain = "http://www.fake.com";
 var GET = "GET";
 var POST = "POST";
+var BAR = "bar";
+var FOO = "foo";
 
 var createElement = function(tag, id) {
   var el = document.createElement(tag);
@@ -98,15 +100,15 @@ describe("Query Elements", function() {
   });
 
   it("gets elements", function() {
-    var el = createElement("div", "foo");
+    var el = createElement("div", FOO);
     addToDocument(el);
 
     expect(njq("#foo").length).to.equal(1);
   });
 
   it("gets finds elements within", function() {
-    var el = createElement("div", "foo");
-    var bar = createElement("div", "bar");
+    var el = createElement("div", FOO);
+    var bar = createElement("div", BAR);
     el.appendChild(bar);
     addToDocument(el);
 
@@ -114,31 +116,31 @@ describe("Query Elements", function() {
   });
 
   it("tests for a class", function() {
-    var el = createElement("div", "foo");
-    el.className = 'foo';
+    var el = createElement("div", FOO);
+    el.className = FOO;
     addToDocument(el);
 
-    expect(njq("#foo").hasClass("foo")).to.be.true;
+    expect(njq("#foo").hasClass(FOO)).to.be.true;
   });
 
   it("adds a class", function() {
-    var el = createElement("div", "foo");
+    var el = createElement("div", FOO);
     addToDocument(el);
 
-    var newClass = njq("#foo").addClass("bar");
-    expect(newClass.hasClass("bar")).to.be.true;
+    var newClass = njq("#foo").addClass(BAR);
+    expect(newClass.hasClass(BAR)).to.be.true;
   });
 
   it("toggles a class", function() {
-    var el = createElement("div", "foo");
+    var el = createElement("div", FOO);
     addToDocument(el);
 
-    var newClass = njq("#foo").toggleClass("bar");
-    expect(newClass.hasClass("bar")).to.be.true;
+    var newClass = njq("#foo").toggleClass(BAR);
+    expect(newClass.hasClass(BAR)).to.be.true;
   });
 
   it("removes a class", function() {
-    var el = createElement("div", "foo");
+    var el = createElement("div", FOO);
     el.className = "foobar";
     addToDocument(el);
 
@@ -149,8 +151,8 @@ describe("Query Elements", function() {
   });
 
   it("empties an element", function() {
-    var el = createElement("div", "foo");
-    var bar = createElement("div", "bar");
+    var el = createElement("div", FOO);
+    var bar = createElement("div", BAR);
     el.appendChild(bar);
     addToDocument(el);
 
@@ -161,8 +163,8 @@ describe("Query Elements", function() {
   });
 
   it("gets html", function() {
-    var el = createElement("div", "foo");
-    var bar = createElement("div", "bar");
+    var el = createElement("div", FOO);
+    var bar = createElement("div", BAR);
     el.appendChild(bar);
     addToDocument(el);
 
@@ -171,10 +173,10 @@ describe("Query Elements", function() {
   });
 
   it("gets text", function() {
-    var el = createElement("div", "foo");
-    var span = createElement("span", "bar");
-    span.className = "foo";
-    el.className = "foo";
+    var el = createElement("div", FOO);
+    var span = createElement("span", BAR);
+    span.className = FOO;
+    el.className = FOO;
     span.innerHTML = "<span>bar</span>";
     el.appendChild(span);
     addToDocument(el);
@@ -185,33 +187,70 @@ describe("Query Elements", function() {
   });
 
   it("gets child elements", function() {
-    var el = createElement("div", "foo");
-    var span = createElement("span", "bar");
-    span.className = "bar";
+    var el = createElement("div", FOO);
+    var span = createElement("span", BAR);
+    span.className = BAR;
     el.appendChild(span);
     addToDocument(el);
 
     var foo = njq("#foo");
     expect(foo.children().get(0)).to.equal(span);
-    expect(foo.children("foo").length).to.equal(0);
+    expect(foo.children(FOO).length).to.equal(0);
   });
 
   it("gets an attribute", function() {
-    var el = createElement("div", "foo");
-    el.setAttribute("data-bar", "bar");
+    var el = createElement("div", FOO);
+    el.setAttribute("data-bar", BAR);
     addToDocument(el);
 
     var foo = njq("#foo");
-    expect(foo.attr("data-bar")).to.equal("bar");
+    expect(foo.attr("data-bar")).to.equal(BAR);
   });
 
   it("gets a css rule", function() {
-    var el = createElement("div", "foo");
+    var el = createElement("div", FOO);
     el.setAttribute("style", "color: rgb(0, 0, 0);");
     addToDocument(el);
 
     var foo = njq("#foo");
     expect(foo.css("color")).to.equal("rgb(0, 0, 0)");
+  });
+});
+
+describe("Events", function() {
+  it("adds an event listener", function(done) {
+    var foo;
+    var listener = function(data) {
+      expect(data).to.equal(BAR);
+      done();
+    };
+    var el = createElement("div", FOO);
+    addToDocument(el);
+    njq("#foo").on(FOO, listener).trigger(FOO, BAR);
+  });
+
+  // it("removes an event listener", function(done) {
+  //   var foo;
+  //   var listener = function(data) {
+  //     expect(data).to.equal(BAR);
+  //     done();
+  //   };
+  //   var el = createElement("div", FOO);
+  //   addToDocument(el);
+  //   njq("#foo").on(FOO, listener).trigger(FOO, BAR);
+  // });
+
+  it("triggers an event", function(done) {
+    var foo;
+    var listener = function(data) {
+      var result = data.detail || data;
+      expect(result).to.equal(BAR);
+      done();
+    };
+    var el = createElement("div", FOO);
+    addToDocument(el);
+    foo = document.getElementById(FOO).addEventListener(FOO, listener);
+    njq("#foo").trigger(FOO, BAR);
   });
 });
 
@@ -221,7 +260,7 @@ describe("Effects", function() {
   });
 
   it("hides", function() {
-    var el = createElement("div", "foo");
+    var el = createElement("div", FOO);
     addToDocument(el);
 
     expect(el.style.display).to.equal("");
@@ -230,7 +269,7 @@ describe("Effects", function() {
   });
 
   it("shows", function() {
-    var el = createElement("div", "foo");
+    var el = createElement("div", FOO);
     addToDocument(el);
 
     el.style.display = "none";
