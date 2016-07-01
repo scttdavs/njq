@@ -73,7 +73,6 @@ describe("Basics", function() {
     njq.ajax({
       type: GET,
       url: domain + "/some/shit",
-      data: result,
       success: function(data) {
         expect(JSON.parse(data)).to.eql(result);
         done();
