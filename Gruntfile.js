@@ -25,7 +25,7 @@ module.exports = function(grunt){
       uglify: {
         my_target: {
           files: {
-            'typist.min.js': ['typist.js']
+            'njq.min.js': ['index.js']
           }
         }
       }

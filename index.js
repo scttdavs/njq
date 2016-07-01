@@ -13,6 +13,14 @@
   };
   NjqError.prototype = Object.create(NjqError.prototype);
 
+  var hasClass = function(item, className) {
+    if (item.classList) {
+      return item.classList.contains(className);
+    } else {
+      return new RegExp('(^| )' + className + '( |$)', 'gi').test(item.className);
+    }
+  };
+
   function wrappedEl(el) {
     var obj = Object.create({
       get: function(index) {
@@ -41,13 +49,11 @@
           return false;
         }
 
-        return Array.prototype.every.call(el, function(item) {
-          if (item.classList) {
-            return item.classList.contains(className);
-          } else {
-            return new RegExp('(^| )' + className + '( |$)', 'gi').test(item.className);
-          }
-        });
+        var hasClassCurry = function(item) {
+          return hasClass(item, className);
+        };
+
+        return Array.prototype.every.call(el, hasClassCurry);
       },
 
       addClass: function(className) {
@@ -97,6 +103,20 @@
         return Array.prototype.reduce.call(el, function(previous, currentEl) {
           return currentEl.textContent + currentEl.textContent;
         });
+      },
+
+      children: function(selector) {
+        var children = Array.prototype.map.call(el, function(item) {
+          return item.children[0];
+        });
+
+        if (selector) {
+          children = children.filter(function(item) {
+            return hasClass(item, selector);
+          });
+        }
+
+        return wrappedEl(children);
       }
     });
 

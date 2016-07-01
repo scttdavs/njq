@@ -164,6 +164,18 @@ describe("Query Elements", function() {
     var foo = njq(".foo");
     expect(foo.text()).to.equal("barbar");
   });
+
+  it("gets child elements", function() {
+    var el = createElement("div", "foo");
+    var span = createElement("span", "bar");
+    span.className = "bar";
+    el.appendChild(span);
+    addToDocument(el);
+
+    var foo = njq("#foo");
+    expect(foo.children().get(0)).to.equal(span);
+    expect(foo.children("foo").length).to.equal(0);
+  });
 });
 
 describe("Effects", function() {
