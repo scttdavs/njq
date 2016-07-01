@@ -3,6 +3,7 @@
 
 var chai = require("chai");
 var expect = chai.expect;
+var assert = chai.assert;
 var njq = require("./../");
 var zock = require("zock");
 
@@ -218,10 +219,14 @@ describe("Query Elements", function() {
 });
 
 describe("Events", function() {
+  afterEach(function() {
+    document.body.innerHTML = "";
+  });
+
   it("adds an event listener", function(done) {
     var foo;
     var listener = function(data) {
-      expect(data).to.equal(BAR);
+      expect(data.detail).to.equal(BAR);
       done();
     };
     var el = createElement("div", FOO);
@@ -229,16 +234,19 @@ describe("Events", function() {
     njq("#foo").on(FOO, listener).trigger(FOO, BAR);
   });
 
-  // it("removes an event listener", function(done) {
-  //   var foo;
-  //   var listener = function(data) {
-  //     expect(data).to.equal(BAR);
-  //     done();
-  //   };
-  //   var el = createElement("div", FOO);
-  //   addToDocument(el);
-  //   njq("#foo").on(FOO, listener).trigger(FOO, BAR);
-  // });
+  it("removes an event listener", function() {
+    var foo;
+    var listener = function(data) {
+      assert.fail("this", "should not run");
+    };
+    var el = createElement("div", FOO);
+    addToDocument(el);
+    foo = njq("#foo")
+          .on(FOO, listener)
+          .off(FOO, listener)
+          .trigger(FOO, BAR);
+
+  });
 
   it("triggers an event", function(done) {
     var foo;

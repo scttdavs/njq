@@ -144,6 +144,15 @@ njq(".foo").on("bar", function(data) {
 // LOG foobar
 ```
 
+#### off
+```javascript
+var listener = function(data) {
+  console.log(data);
+};
+njq(".foo").on("bar", listener).off("bar", listener).trigger("bar", "foobar");
+// LOG nothing happens
+```
+
 #### trigger
 ```javascript
 njq(".foo").on("bar", function(data) {

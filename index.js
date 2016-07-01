@@ -161,11 +161,16 @@
       },
 
       on: function(eventName, listener) {
-        var listenerWrapper = function(data) {
-          listener(data.detail || data);
-        }
         this.each(function(i, item) {
-          item.addEventListener(eventName, listenerWrapper);
+          item.addEventListener(eventName, listener);
+        });
+
+        return this;
+      },
+
+      off: function(eventName, listener) {
+        this.each(function(i, item) {
+          item.removeEventListener(eventName, listener);
         });
 
         return this;
