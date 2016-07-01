@@ -130,26 +130,27 @@ describe("Query Elements", function() {
   });
 });
 
-// describe("Effects", function() {
-//   it("shows", function() {
-//     var el = document.createElement("div");
-//     el.setAttribute("id", "foo");
-//     document.body.appendChild(el);
-//
-//     expect(njq("#foo").length).to.equal(1);
-//     el.parentNode.removeChild(el);
-//   });
-//
-//   it("hides", function() {
-//     var el = document.createElement("div");
-//     var bar = document.createElement("div");
-//     el.setAttribute("id", "foo");
-//     bar.setAttribute("id", "bar");
-//     el.appendChild(bar);
-//     document.body.appendChild(el);
-//
-//     expect(njq("#foo").find("#bar").length).to.equal(1);
-//     bar.parentNode.removeChild(bar);
-//     el.parentNode.removeChild(el);
-//   });
-// });
+describe("Effects", function() {
+  afterEach(function() {
+    document.body.innerHTML = "";
+  });
+
+  it("hides", function() {
+    var el = createElement("div", "foo");
+    addToDocument(el);
+
+    expect(el.style.display).to.equal("");
+    var newEl = njq("#foo").hide();
+    expect(el.style.display).to.equal("none");
+  });
+
+  it("shows", function() {
+    var el = createElement("div", "foo");
+    addToDocument(el);
+
+    el.style.display = "none";
+    expect(el.style.display).to.equal("none");
+    var newEl = njq("#foo").show();
+    expect(el.style.display).to.equal("");
+  });
+});

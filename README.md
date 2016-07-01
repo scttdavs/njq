@@ -84,6 +84,18 @@ foo.each(function(el) {
 });
 ```
 
+### Effects
+
+#### hide
+```javascript
+var foo = njq(".foo").hide(); // sets display to none;
+```
+
+#### show
+```javascript
+var foo = njq(".foo").show(); // removes display value
+```
+
 ## Testing
 
 `npm test`

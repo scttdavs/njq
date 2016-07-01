@@ -60,6 +60,21 @@
         });
 
         return this;
+      },
+
+      setDisplay: function(value) {
+        this.each(function(item) {
+          item.style.display = value;
+        });
+        return this;
+      },
+
+      show: function() {
+        return this.setDisplay("");
+      },
+
+      hide: function() {
+        return this.setDisplay("none");
       }
     });
     return obj;
