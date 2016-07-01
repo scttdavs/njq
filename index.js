@@ -121,6 +121,10 @@
 
       attr: function(attr) {
         return this.get(0).getAttribute(attr);
+      },
+
+      css: function(rule) {
+        return getComputedStyle(this.get(0))[rule];
       }
     });
 

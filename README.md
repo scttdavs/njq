@@ -114,6 +114,12 @@ var foo = njq(".foo"); // <div class="foo" data-bar="bar"></div>
 foo.attr("data-bar"); // bar
 ```
 
+#### css
+```javascript
+var foo = njq(".foo"); // <div class="foo" style="color: red;"></div>
+foo.css("color"); // red
+```
+
 ### Effects
 
 #### hide

@@ -185,6 +185,15 @@ describe("Query Elements", function() {
     var foo = njq("#foo");
     expect(foo.attr("data-bar")).to.equal("bar");
   });
+
+  it("gets a css rule", function() {
+    var el = createElement("div", "foo");
+    el.setAttribute("style", "color: rgb(0, 0, 0);");
+    addToDocument(el);
+
+    var foo = njq("#foo");
+    expect(foo.css("color")).to.equal("rgb(0, 0, 0)");
+  });
 });
 
 describe("Effects", function() {
