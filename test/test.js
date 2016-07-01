@@ -99,5 +99,27 @@ describe("Query Elements", function() {
     document.body.appendChild(el);
 
     expect(njq("#foo").find("#bar").length).to.equal(1);
+    bar.parentNode.removeChild(bar);
+    el.parentNode.removeChild(el);
+  });
+
+  it("tests for a class", function() {
+    var el = document.createElement("div");
+    el.setAttribute("id", "foo");
+    el.className = 'foo';
+    document.body.appendChild(el);
+
+    expect(njq("#foo").hasClass("foo")).to.be.true;
+    el.parentNode.removeChild(el);
+  });
+
+  it("adds a class", function() {
+    var el = document.createElement("div");
+    el.setAttribute("id", "foo");
+    document.body.appendChild(el);
+
+    var newClass = njq("#foo").addClass("bar");
+    expect(newClass.hasClass("bar")).to.be.true;
+    el.parentNode.removeChild(el);
   });
 });

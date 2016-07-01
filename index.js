@@ -22,7 +22,37 @@
         }
         return wrappedEl(results);
       },
-      length: el.length
+      length: el.length,
+      hasClass: function(className) {
+        var ret = false;
+        if (el.length === 0) {
+          return ret;
+        }
+
+        for(var i = 0; i < el.length; i++) {
+          if (el[i].classList) {
+            ret = el[i].classList.contains(className);
+          } else {
+            ret = new RegExp('(^| )' + className + '( |$)', 'gi').test(el[i].className);
+          }
+          if (ret) {
+            return ret;
+          }
+        }
+
+        return ret;
+      },
+      addClass: function(className) {
+        for(var i = 0; i < el.length; i++) {
+          if (el[i].classList) {
+            el[i].classList.add(className);
+          } else {
+            el[i].className += ' ' + className;
+          }
+        }
+
+        return this;
+      }
     });
     return obj;
   }
