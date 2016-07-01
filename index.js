@@ -117,6 +117,10 @@
         }
 
         return wrappedEl(children);
+      },
+
+      attr: function(attr) {
+        return this.get(0).getAttribute(attr);
       }
     });
 

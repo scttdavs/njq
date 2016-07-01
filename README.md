@@ -108,6 +108,12 @@ var foo = njq(".foo"); // <div class="foo"><span>BAR</span></div>
 foo.children(); // <span>BAR</span>
 ```
 
+#### attr
+```javascript
+var foo = njq(".foo"); // <div class="foo" data-bar="bar"></div>
+foo.attr("data-bar"); // bar
+```
+
 ### Effects
 
 #### hide

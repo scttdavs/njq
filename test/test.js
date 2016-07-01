@@ -176,6 +176,15 @@ describe("Query Elements", function() {
     expect(foo.children().get(0)).to.equal(span);
     expect(foo.children("foo").length).to.equal(0);
   });
+
+  it("gets an attribute", function() {
+    var el = createElement("div", "foo");
+    el.setAttribute("data-bar", "bar");
+    addToDocument(el);
+
+    var foo = njq("#foo");
+    expect(foo.attr("data-bar")).to.equal("bar");
+  });
 });
 
 describe("Effects", function() {
