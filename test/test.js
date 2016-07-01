@@ -129,6 +129,14 @@ describe("Query Elements", function() {
     expect(newClass.hasClass("bar")).to.be.true;
   });
 
+  it("toggles a class", function() {
+    var el = createElement("div", "foo");
+    addToDocument(el);
+
+    var newClass = njq("#foo").toggleClass("bar");
+    expect(newClass.hasClass("bar")).to.be.true;
+  });
+
   it("removes a class", function() {
     var el = createElement("div", "foo");
     el.className = "foobar";

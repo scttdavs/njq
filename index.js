@@ -80,6 +80,27 @@
         return this;
       },
 
+      toggleClass: function(className) {
+        this.each(function(i, item) {
+          if (item.classList) {
+            item.classList.toggle(className);
+          } else {
+            var classes = item.className.split(' ');
+            var existingIndex = classes.indexOf(className);
+
+            if (existingIndex >= 0) {
+              classes.splice(existingIndex, 1);
+            } else {
+              classes.push(className);
+            }
+
+            item.className = classes.join(' ');
+          }
+        });
+
+        return this;
+      },
+
       setDisplay: function(value) {
         this.each(function(i, item) {
           item.style.display = value;

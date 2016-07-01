@@ -79,8 +79,15 @@ foo.hasClass("bar"); // true
 #### removeClass
 ```javascript
 var foo = njq(".foo"); // <div class="foo bar">stuff</div>
-foo.removeClass("bar"); // 
+foo.removeClass("bar"); //
 foo.hasClass("bar"); // false
+```
+
+#### toggleClass
+```javascript
+var foo = njq(".foo"); // <div class="foo">stuff</div>
+foo.toggleClass("bar"); //
+foo.hasClass("bar"); // true
 ```
 
 #### each
