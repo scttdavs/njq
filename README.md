@@ -53,14 +53,35 @@ njq.ajax({
 
 #### selector
 ```javascript
-var far = njq("#foo");
+var foo = njq("#foo");
 foo.find("#bar").length; // some number
 ```
 
 #### find
 ```javascript
-var far = njq("#foo");
+var foo = njq("#foo");
 foo.find("#bar").length; // some number
+```
+
+#### hasClass
+```javascript
+var foo = njq(".foo");
+foo.hasClass("foo"); // true
+```
+
+#### addClass
+```javascript
+var foo = njq(".foo");
+foo.addClass("bar");
+foo.hasClass("bar"); // true
+```
+
+#### each
+```javascript
+var foo = njq(".foo");
+foo.each(function(el) {
+  console.log(el);
+});
 ```
 
 ## Testing

@@ -15,41 +15,49 @@
 
   function wrappedEl(el) {
     var obj = Object.create({
+      each: function(func) {
+        for(var i = 0; i < el.length; i++) {
+          func(el[i]);
+        }
+      },
+
       find: function(selector) {
         var results = [];
-        for(var i = 0; i < el.length; i++) {
-          results = results.concat(el[i].querySelectorAll(selector));
-        }
+        this.each(function(item) {
+          results = results.concat(item.querySelectorAll(selector));
+        });
+
         return wrappedEl(results);
       },
+
       length: el.length,
+
       hasClass: function(className) {
         var ret = false;
         if (el.length === 0) {
           return ret;
         }
 
-        for(var i = 0; i < el.length; i++) {
-          if (el[i].classList) {
-            ret = el[i].classList.contains(className);
+        // TODO every() here
+        this.each(function(item) {
+          if (item.classList) {
+            ret = item.classList.contains(className);
           } else {
-            ret = new RegExp('(^| )' + className + '( |$)', 'gi').test(el[i].className);
+            ret = new RegExp('(^| )' + className + '( |$)', 'gi').test(item.className);
           }
-          if (ret) {
-            return ret;
-          }
-        }
+        });
 
         return ret;
       },
+
       addClass: function(className) {
-        for(var i = 0; i < el.length; i++) {
-          if (el[i].classList) {
-            el[i].classList.add(className);
+        this.each(function(item) {
+          if (item.classList) {
+            item.classList.add(className);
           } else {
-            el[i].className += ' ' + className;
+            item.className += ' ' + className;
           }
-        }
+        });
 
         return this;
       }
