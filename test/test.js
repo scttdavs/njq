@@ -1,4 +1,4 @@
-/* globals document, window, require, describe, it */
+/* globals document, window, require, describe, it, afterEach */
 "use strict";
 
 var chai = require("chai");
@@ -10,6 +10,18 @@ var Promise = require('es6-promise').Promise; // zock needs this
 var domain = "http://www.fake.com";
 var GET = "GET";
 var POST = "POST";
+
+var createElement = function(tag, id) {
+  var el = document.createElement(tag);
+  if (id) {
+    el.setAttribute("id", id);
+  }
+  return el;
+};
+
+var addToDocument = function(el) {
+  document.body.appendChild(el);
+};
 
 var setGet = function(domain, path, result) {
   window.XMLHttpRequest = zock
@@ -81,45 +93,63 @@ describe("Ajax", function() {
 });
 
 describe("Query Elements", function() {
+  afterEach(function() {
+    document.body.innerHTML = "";
+  });
+
   it("gets elements", function() {
-    var el = document.createElement("div");
-    el.setAttribute("id", "foo");
-    document.body.appendChild(el);
+    var el = createElement("div", "foo");
+    addToDocument(el);
 
     expect(njq("#foo").length).to.equal(1);
-    el.parentNode.removeChild(el);
   });
 
   it("gets finds elements within", function() {
-    var el = document.createElement("div");
-    var bar = document.createElement("div");
-    el.setAttribute("id", "foo");
-    bar.setAttribute("id", "bar");
+    var el = createElement("div", "foo");
+    var bar = createElement("div", "bar");
     el.appendChild(bar);
-    document.body.appendChild(el);
+    addToDocument(el);
 
     expect(njq("#foo").find("#bar").length).to.equal(1);
-    bar.parentNode.removeChild(bar);
-    el.parentNode.removeChild(el);
   });
 
   it("tests for a class", function() {
-    var el = document.createElement("div");
-    el.setAttribute("id", "foo");
+    var el = createElement("div", "foo");
     el.className = 'foo';
-    document.body.appendChild(el);
+    addToDocument(el);
 
     expect(njq("#foo").hasClass("foo")).to.be.true;
-    el.parentNode.removeChild(el);
   });
 
   it("adds a class", function() {
-    var el = document.createElement("div");
-    el.setAttribute("id", "foo");
-    document.body.appendChild(el);
+    var el = createElement("div", "foo");
+    addToDocument(el);
 
     var newClass = njq("#foo").addClass("bar");
     expect(newClass.hasClass("bar")).to.be.true;
-    el.parentNode.removeChild(el);
   });
 });
+
+// describe("Effects", function() {
+//   it("shows", function() {
+//     var el = document.createElement("div");
+//     el.setAttribute("id", "foo");
+//     document.body.appendChild(el);
+//
+//     expect(njq("#foo").length).to.equal(1);
+//     el.parentNode.removeChild(el);
+//   });
+//
+//   it("hides", function() {
+//     var el = document.createElement("div");
+//     var bar = document.createElement("div");
+//     el.setAttribute("id", "foo");
+//     bar.setAttribute("id", "bar");
+//     el.appendChild(bar);
+//     document.body.appendChild(el);
+//
+//     expect(njq("#foo").find("#bar").length).to.equal(1);
+//     bar.parentNode.removeChild(bar);
+//     el.parentNode.removeChild(el);
+//   });
+// });
