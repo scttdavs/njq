@@ -129,6 +129,17 @@ describe("Query Elements", function() {
     expect(newClass.hasClass("bar")).to.be.true;
   });
 
+  it("removes a class", function() {
+    var el = createElement("div", "foo");
+    el.className = "foobar";
+    addToDocument(el);
+
+    var foo = njq("#foo");
+    expect(foo.hasClass("foobar")).to.be.true;
+    foo.removeClass("foobar");
+    expect(foo.hasClass("foobar")).to.be.false;
+  });
+
   it("empties an element", function() {
     var el = createElement("div", "foo");
     var bar = createElement("div", "bar");

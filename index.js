@@ -68,6 +68,18 @@
         return this;
       },
 
+      removeClass: function(className) {
+        this.each(function(i, item) {
+          if (item.classList) {
+            item.classList.remove(className);
+          } else {
+            item.className = item.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+          }
+        });
+
+        return this;
+      },
+
       setDisplay: function(value) {
         this.each(function(i, item) {
           item.style.display = value;
