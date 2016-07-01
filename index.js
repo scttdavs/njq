@@ -87,6 +87,16 @@
 
       html: function() {
         return this.get(0).innerHTML;
+      },
+
+      text: function() {
+        if (this.length === 1) {
+          return this.get(0).textContent;
+        }
+
+        return Array.prototype.reduce.call(el, function(previous, currentEl) {
+          return currentEl.textContent + currentEl.textContent;
+        });
       }
     });
 

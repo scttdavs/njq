@@ -150,6 +150,20 @@ describe("Query Elements", function() {
     var foo = njq("#foo");
     expect(foo.html()).to.equal('<div id="bar"></div>');
   });
+
+  it("gets text", function() {
+    var el = createElement("div", "foo");
+    var span = createElement("span", "bar");
+    span.className = "foo";
+    el.className = "foo";
+    span.innerHTML = "<span>bar</span>";
+    el.appendChild(span);
+    addToDocument(el);
+    addToDocument(span);
+
+    var foo = njq(".foo");
+    expect(foo.text()).to.equal("barbar");
+  });
 });
 
 describe("Effects", function() {

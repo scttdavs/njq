@@ -96,6 +96,12 @@ var foo = njq(".foo"); // <div class="foo">BAR</div>
 foo.html(); // BAR
 ```
 
+#### text
+```javascript
+var foo = njq(".foo"); // <div class="foo"><span>BAR</span></div>
+foo.text(); // BAR
+```
+
 ### Effects
 
 #### hide
