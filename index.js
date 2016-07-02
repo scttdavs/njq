@@ -21,173 +21,177 @@
     }
   };
 
-  function wrappedEl(el) {
-    var obj = Object.create({
-      get: function(index) {
-        return el[index];
-      },
+  var wrappedElProto = {
+    get: function(index) {
+      return this.getEl()[index];
+    },
 
-      each: function(func) {
-        Array.prototype.forEach.call(el, function(el, i) {
-          func(i, el);
-        });
-      },
+    each: function(func) {
+      Array.prototype.forEach.call(this.getEl(), function(el, i) {
+        func(i, el);
+      });
+    },
 
-      find: function(selector) {
-        var results = [];
-        this.each(function(i, item) {
-          results = results.concat(item.querySelectorAll(selector));
-        });
-
-        return wrappedEl(results);
-      },
-
-      length: el.length,
-
-      hasClass: function(className) {
-        if (el.length === 0) {
-          return false;
-        }
-
-        var hasClassCurry = function(item) {
-          return hasClass(item, className);
-        };
-
-        return Array.prototype.every.call(el, hasClassCurry);
-      },
-
-      addClass: function(className) {
-        this.each(function(i, item) {
-          if (item.classList) {
-            item.classList.add(className);
-          } else {
-            item.className += ' ' + className;
-          }
-        });
-
-        return this;
-      },
-
-      removeClass: function(className) {
-        this.each(function(i, item) {
-          if (item.classList) {
-            item.classList.remove(className);
-          } else {
-            item.className = item.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
-          }
-        });
-
-        return this;
-      },
-
-      toggleClass: function(className) {
-        this.each(function(i, item) {
-          if (item.classList) {
-            item.classList.toggle(className);
-          } else {
-            var classes = item.className.split(' ');
-            var existingIndex = classes.indexOf(className);
-
-            if (existingIndex >= 0) {
-              classes.splice(existingIndex, 1);
-            } else {
-              classes.push(className);
-            }
-
-            item.className = classes.join(' ');
-          }
-        });
-
-        return this;
-      },
-
-      setDisplay: function(value) {
-        this.each(function(i, item) {
-          item.style.display = value;
-        });
-        return this;
-      },
-
-      show: function() {
-        return this.setDisplay("");
-      },
-
-      hide: function() {
-        return this.setDisplay("none");
-      },
-
-      empty: function() {
-        this.each(function(i, item) {
-          item.innerHTML = '';
-        });
-
-        return this;
-      },
-
-      html: function() {
-        return this.get(0).innerHTML;
-      },
-
-      text: function() {
-        if (this.length === 1) {
-          return this.get(0).textContent;
-        }
-
-        return Array.prototype.reduce.call(el, function(previous, currentEl) {
-          return currentEl.textContent + currentEl.textContent;
-        });
-      },
-
-      children: function(selector) {
-        var children = Array.prototype.map.call(el, function(item) {
-          return item.children[0];
-        });
-
-        if (selector) {
-          children = children.filter(function(item) {
-            return hasClass(item, selector);
-          });
-        }
-
-        return wrappedEl(children);
-      },
-
-      attr: function(attr) {
-        return this.get(0).getAttribute(attr);
-      },
-
-      css: function(rule) {
-        return getComputedStyle(this.get(0))[rule];
-      },
-
-      on: function(eventName, listener) {
-        this.each(function(i, item) {
-          item.addEventListener(eventName, listener);
-        });
-
-        return this;
-      },
-
-      off: function(eventName, listener) {
-        this.each(function(i, item) {
-          item.removeEventListener(eventName, listener);
-        });
-
-        return this;
-      },
-
-      trigger: function(eventName, data) {
-        var newEvent;
-        if (window.CustomEvent) {
-          newEvent = new CustomEvent(eventName, { detail: data });
-        } else {
-          newEvent = document.createEvent('CustomEvent');
-          newEvent.initCustomEvent(eventName, true, true, data);
-        }
-
-        this.get(0).dispatchEvent(newEvent);
+    hasClass: function(className) {
+      if (this.length === 0) {
+        return false;
       }
-    });
+
+      var hasClassCurry = function(item) {
+        return hasClass(item, className);
+      };
+
+      return Array.prototype.every.call(this.getEl(), hasClassCurry);
+    },
+
+    text: function() {
+      if (this.length === 1) {
+        return this.get(0).textContent;
+      }
+
+      return Array.prototype.reduce.call(this.getEl(), function(previous, currentEl) {
+        return currentEl.textContent + currentEl.textContent;
+      });
+    },
+
+    children: function(selector) {
+      var children = Array.prototype.map.call(this.getEl(), function(item) {
+        return item.children[0];
+      });
+
+      if (selector) {
+        children = children.filter(function(item) {
+          return hasClass(item, selector);
+        });
+      }
+
+      return wrappedEl(children);
+    },
+
+    find: function(selector) {
+      var results = [];
+      this.each(function(i, item) {
+        results = results.concat(item.querySelectorAll(selector));
+      });
+
+      return wrappedEl(results);
+    },
+
+    addClass: function(className) {
+      this.each(function(i, item) {
+        if (item.classList) {
+          item.classList.add(className);
+        } else {
+          item.className += ' ' + className;
+        }
+      });
+
+      return this;
+    },
+
+    removeClass: function(className) {
+      this.each(function(i, item) {
+        if (item.classList) {
+          item.classList.remove(className);
+        } else {
+          item.className = item.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+        }
+      });
+
+      return this;
+    },
+
+    toggleClass: function(className) {
+      this.each(function(i, item) {
+        if (item.classList) {
+          item.classList.toggle(className);
+        } else {
+          var classes = item.className.split(' ');
+          var existingIndex = classes.indexOf(className);
+
+          if (existingIndex >= 0) {
+            classes.splice(existingIndex, 1);
+          } else {
+            classes.push(className);
+          }
+
+          item.className = classes.join(' ');
+        }
+      });
+
+      return this;
+    },
+
+    setDisplay: function(value) {
+      this.each(function(i, item) {
+        item.style.display = value;
+      });
+      return this;
+    },
+
+    show: function() {
+      return this.setDisplay("");
+    },
+
+    hide: function() {
+      return this.setDisplay("none");
+    },
+
+    empty: function() {
+      this.each(function(i, item) {
+        item.innerHTML = '';
+      });
+
+      return this;
+    },
+
+    html: function() {
+      return this.get(0).innerHTML;
+    },
+
+    attr: function(attr) {
+      return this.get(0).getAttribute(attr);
+    },
+
+    css: function(rule) {
+      return getComputedStyle(this.get(0))[rule];
+    },
+
+    on: function(eventName, listener) {
+      this.each(function(i, item) {
+        item.addEventListener(eventName, listener);
+      });
+
+      return this;
+    },
+
+    off: function(eventName, listener) {
+      this.each(function(i, item) {
+        item.removeEventListener(eventName, listener);
+      });
+
+      return this;
+    },
+
+    trigger: function(eventName, data) {
+      var newEvent;
+      if (window.CustomEvent) {
+        newEvent = new CustomEvent(eventName, { detail: data });
+      } else {
+        newEvent = document.createEvent('CustomEvent');
+        newEvent.initCustomEvent(eventName, true, true, data);
+      }
+
+      this.get(0).dispatchEvent(newEvent);
+    }
+  };
+
+  function wrappedEl(el) {
+    var obj = Object.create(wrappedElProto);
+    obj.getEl = function() {
+      return el;
+    };
+    obj.length = el.length;
 
     return obj;
   }
