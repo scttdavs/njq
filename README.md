@@ -122,6 +122,11 @@ var foo = njq(".foo"); // <div class="foo"><span>BAR</span></div>
 foo.children(); // <span>BAR</span>
 ```
 
+#### append
+```javascript
+var foo = njq(".foo").append("<p>bar</p>"); // <div class="foo"><p>bar</p></div>
+```
+
 #### attr
 ```javascript
 var foo = njq(".foo"); // <div class="foo" data-bar="bar"></div>

@@ -195,6 +195,22 @@
         document.addEventListener('DOMContentLoaded', fn);
       }
       return this;
+    },
+
+    append: function(childEl) {
+      if (typeof childEl === "string") {
+        var tmp = document.implementation.createHTMLDocument();
+        tmp.body.innerHTML = childEl;
+        childEl = tmp.body.children[0];
+      } else if (childEl.get) {
+        childEl = childEl.get(0);
+      }
+      
+      this.each(function(i, item) {
+        item.appendChild(childEl);
+      });
+
+      return this;
     }
   };
 

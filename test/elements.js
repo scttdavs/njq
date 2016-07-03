@@ -141,4 +141,40 @@ describe("Query Elements", function() {
     var foo = njq("#foo");
     expect(foo.css("color")).to.equal("rgb(0, 0, 0)");
   });
+
+  it("appends to a parent", function() {
+    var foo = createElement("div", FOO);
+    var bar = createElement("div", BAR);
+    var test = createElement("div", "test");
+    foo.className = "foobar";
+    bar.className = "foobar";
+    addToDocument(foo);
+    addToDocument(bar);
+
+    var results = njq(".foobar").append(test);
+    expect(results.find("#test").length).to.equal(2);
+  });
+
+  it("appends to an html string to parent", function() {
+    var foo = createElement("div", FOO);
+    var bar = createElement("div", BAR);
+    var test = '<div id="test"></div>';
+    foo.className = "foobar";
+    bar.className = "foobar";
+    addToDocument(foo);
+    addToDocument(bar);
+
+    var results = njq(".foobar").append(test);
+    expect(results.find("#test").length).to.equal(2);
+  });
+
+  it("appends to an njq element to parent", function() {
+    var foo = createElement("div", FOO);
+    var bar = createElement("div", BAR);
+    bar.className = "bar";
+    addToDocument(foo);
+
+    var results = njq("#foo").append(bar);
+    expect(results.find(".bar").length).to.equal(1);
+  });
 });
