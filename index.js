@@ -23,7 +23,10 @@
 
   var wrappedElProto = {
     get: function(index) {
-      return this.getEl()[index];
+      if (this.getEl().length) {
+        return this.getEl()[index];
+      }
+      return this.getEl();
     },
 
     each: function(func) {
@@ -183,6 +186,15 @@
       }
 
       this.get(0).dispatchEvent(newEvent);
+    },
+
+    ready: function(fn) {
+      if (document.readyState != 'loading'){
+        fn();
+      } else {
+        document.addEventListener('DOMContentLoaded', fn);
+      }
+      return this;
     }
   };
 
@@ -197,6 +209,9 @@
   }
 
   var njq = function(selector) {
+    if (selector === document || selector === window) {
+      return wrappedEl(selector);
+    }
     return wrappedEl(document.querySelectorAll(selector));
   };
 

@@ -63,4 +63,13 @@ describe("Events", function() {
     foo = document.getElementById(FOO).addEventListener(FOO, listener);
     njq("#foo").trigger(FOO, BAR);
   });
+
+  it("executes listener when DOM is ready", function(done) {
+    var foo;
+    var listener = function() {
+      expect(true).to.equal(true);
+      done();
+    };
+    njq(document).ready(listener).trigger("DOMContentLoaded");
+  });
 });

@@ -161,6 +161,13 @@ njq(".foo").on("bar", function(data) {
 // LOG foobar
 ```
 
+#### ready
+```javascript
+njq(document).ready(function() {
+  // document is ready
+});
+```
+
 ### Effects
 
 #### hide
