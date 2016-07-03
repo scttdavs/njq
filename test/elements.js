@@ -213,4 +213,12 @@ describe("Query Elements", function() {
     var results = njq("#foo").prepend(bar);
     expect(results.find(".bar").length).to.equal(1);
   });
+
+  it("checks if element matches selector", function() {
+    var foo = createElement("div", FOO);
+    foo.className = FOO;
+    addToDocument(foo);
+
+    expect(njq("#foo").is(".foo")).to.be.true;
+  });
 });

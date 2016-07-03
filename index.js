@@ -225,6 +225,18 @@
       });
 
       return this;
+    },
+
+    is: function(selector) {
+      if (this.length === 0) {
+        return false;
+      }
+
+      var isCurry = function(item) {
+        return (item.matches || item.matchesSelector || item.msMatchesSelector || item.mozMatchesSelector || item.webkitMatchesSelector || item.oMatchesSelector).call(item, selector);
+      };
+
+      return Array.prototype.every.call(this.getEl(), isCurry);
     }
   };
 

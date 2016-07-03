@@ -63,6 +63,12 @@ var foo = njq("#foo");
 foo.find("#bar").length; // some number
 ```
 
+#### is
+```javascript
+var foo = njq(".foo");
+foo.is(".foo"); // true
+```
+
 #### hasClass
 ```javascript
 var foo = njq(".foo");
