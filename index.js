@@ -21,6 +21,18 @@
     }
   };
 
+  var getElFromInput = function(input) {
+    if (typeof input === "string") {
+      var tmp = document.implementation.createHTMLDocument();
+      tmp.body.innerHTML = input;
+      input = tmp.body.children[0];
+    } else if (input.get) {
+      input = input.get(0);
+    }
+
+    return input;
+  }
+
   var wrappedElProto = {
     get: function(index) {
       if (this.getEl().length) {
@@ -198,16 +210,18 @@
     },
 
     append: function(childEl) {
-      if (typeof childEl === "string") {
-        var tmp = document.implementation.createHTMLDocument();
-        tmp.body.innerHTML = childEl;
-        childEl = tmp.body.children[0];
-      } else if (childEl.get) {
-        childEl = childEl.get(0);
-      }
-      
+      childEl = getElFromInput(childEl);
       this.each(function(i, item) {
         item.appendChild(childEl);
+      });
+
+      return this;
+    },
+
+    prepend: function(childEl) {
+      childEl = getElFromInput(childEl);
+      this.each(function(i, item) {
+        item.insertBefore(childEl, item.firstChild);
       });
 
       return this;

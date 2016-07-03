@@ -177,4 +177,40 @@ describe("Query Elements", function() {
     var results = njq("#foo").append(bar);
     expect(results.find(".bar").length).to.equal(1);
   });
+
+  it("prepends to a parent", function() {
+    var foo = createElement("div", FOO);
+    var bar = createElement("div", BAR);
+    var test = createElement("div", "test");
+    foo.className = "foobar";
+    bar.className = "foobar";
+    addToDocument(foo);
+    addToDocument(bar);
+
+    var results = njq(".foobar").prepend(test);
+    expect(results.find("#test").length).to.equal(2);
+  });
+
+  it("prepends to an html string to parent", function() {
+    var foo = createElement("div", FOO);
+    var bar = createElement("div", BAR);
+    var test = '<div id="test"></div>';
+    foo.className = "foobar";
+    bar.className = "foobar";
+    addToDocument(foo);
+    addToDocument(bar);
+
+    var results = njq(".foobar").prepend(test);
+    expect(results.find("#test").length).to.equal(2);
+  });
+
+  it("prepends to an njq element to parent", function() {
+    var foo = createElement("div", FOO);
+    var bar = createElement("div", BAR);
+    bar.className = "bar";
+    addToDocument(foo);
+
+    var results = njq("#foo").prepend(bar);
+    expect(results.find(".bar").length).to.equal(1);
+  });
 });

@@ -124,7 +124,12 @@ foo.children(); // <span>BAR</span>
 
 #### append
 ```javascript
-var foo = njq(".foo").append("<p>bar</p>"); // <div class="foo"><p>bar</p></div>
+var foo = njq(".foo").append("<p>bar</p>"); // <div class="foo">stuff<p>bar</p></div>
+```
+
+#### prepend
+```javascript
+var foo = njq(".foo").prepend("<p>bar</p>"); // <div class="foo"><p>bar</p>stuff</div>
 ```
 
 #### attr
