@@ -147,18 +147,16 @@
       });
     },
 
-    setDisplay: function(value) {
+    show: function() {
       return this.each(function(i, item) {
-        item.style.display = value;
+        item.style.display = "";
       });
     },
 
-    show: function() {
-      return this.setDisplay("");
-    },
-
     hide: function() {
-      return this.setDisplay("none");
+      return this.each(function(i, item) {
+        item.style.display = "none";
+      });
     },
 
     empty: function() {
