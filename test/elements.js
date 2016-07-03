@@ -41,6 +41,24 @@ describe("Query Elements", function() {
     expect(njq("#foo").find("#bar").length).to.equal(1);
   });
 
+  it("gets the next element", function() {
+    var el = createElement("div", FOO);
+    var bar = createElement("div", BAR);
+    addToDocument(el);
+    addToDocument(bar);
+
+    expect(njq("#foo").next().get(0)).to.equal(bar);
+  });
+
+  it("gets the prev element", function() {
+    var el = createElement("div", FOO);
+    var bar = createElement("div", BAR);
+    addToDocument(el);
+    addToDocument(bar);
+
+    expect(njq("#bar").prev().get(0)).to.equal(foo);
+  });
+
   it("tests for a class", function() {
     var el = createElement("div", FOO);
     el.className = FOO;

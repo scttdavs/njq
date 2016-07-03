@@ -63,6 +63,18 @@ var foo = njq("#foo");
 foo.find("#bar").length; // some number
 ```
 
+#### next
+```javascript
+var foo = njq("#foo"); // <div id="foo">foo</div><div id="bar">bar</div>
+foo.next(); // <div id="bar">bar</div>
+```
+
+#### prev
+```javascript
+var foo = njq("#bar"); // <div id="foo">foo</div><div id="bar">bar</div>
+foo.prev(); // <div id="foo">foo</div>
+```
+
 #### is
 ```javascript
 var foo = njq(".foo");

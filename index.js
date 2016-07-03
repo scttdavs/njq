@@ -92,6 +92,24 @@
       return wrappedEl(results);
     },
 
+    next: function() {
+      var results = [];
+      this.each(function(i, item) {
+        results.push(item.nextElementSibling);
+      });
+
+      return wrappedEl(results);
+    },
+
+    prev: function() {
+      var results = [];
+      this.each(function(i, item) {
+        results.push(item.previousElementSibling);
+      });
+
+      return wrappedEl(results);
+    },
+
     addClass: function(className) {
       this.each(function(i, item) {
         if (item.classList) {
