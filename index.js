@@ -45,18 +45,25 @@
       Array.prototype.forEach.call(this.getEl(), function(el, i) {
         func(i, el);
       });
+      return this;
+    },
+
+    every: function(func) {
+      return Array.prototype.every.call(this.getEl(), func);
+    },
+
+    map: function(func) {
+      return Array.prototype.map.call(this.getEl(), func);
+    },
+
+    queryEach: function(func) {
+      return wrappedEl(this.map(func));
     },
 
     hasClass: function(className) {
-      if (this.length === 0) {
-        return false;
-      }
-
-      var hasClassCurry = function(item) {
+      return this.length > 0 && this.every(function(item) {
         return hasClass(item, className);
-      };
-
-      return Array.prototype.every.call(this.getEl(), hasClassCurry);
+      });
     },
 
     text: function() {
@@ -70,7 +77,7 @@
     },
 
     children: function(selector) {
-      var children = Array.prototype.map.call(this.getEl(), function(item) {
+      var children = this.map(function(item) {
         return item.children[0];
       });
 
@@ -84,58 +91,45 @@
     },
 
     find: function(selector) {
-      var results = [];
-      this.each(function(i, item) {
-        results = results.concat(item.querySelectorAll(selector));
+      return this.queryEach(function(item) {
+        return item.querySelectorAll(selector);
       });
-
-      return wrappedEl(results);
     },
 
     next: function() {
-      var results = [];
-      this.each(function(i, item) {
-        results.push(item.nextElementSibling);
+      return this.queryEach(function(item) {
+        return item.nextElementSibling;
       });
-
-      return wrappedEl(results);
     },
 
     prev: function() {
-      var results = [];
-      this.each(function(i, item) {
-        results.push(item.previousElementSibling);
+      return this.queryEach(function(item) {
+        return item.previousElementSibling;
       });
-
-      return wrappedEl(results);
     },
 
     addClass: function(className) {
-      this.each(function(i, item) {
+      return this.each(function(i, item) {
         if (item.classList) {
           item.classList.add(className);
         } else {
           item.className += ' ' + className;
         }
       });
-
-      return this;
     },
 
     removeClass: function(className) {
-      this.each(function(i, item) {
+      return this.each(function(i, item) {
         if (item.classList) {
           item.classList.remove(className);
         } else {
           item.className = item.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
         }
       });
-
-      return this;
     },
 
     toggleClass: function(className) {
-      this.each(function(i, item) {
+      return this.each(function(i, item) {
         if (item.classList) {
           item.classList.toggle(className);
         } else {
@@ -151,15 +145,12 @@
           item.className = classes.join(' ');
         }
       });
-
-      return this;
     },
 
     setDisplay: function(value) {
-      this.each(function(i, item) {
+      return this.each(function(i, item) {
         item.style.display = value;
       });
-      return this;
     },
 
     show: function() {
@@ -171,11 +162,9 @@
     },
 
     empty: function() {
-      this.each(function(i, item) {
+      return this.each(function(i, item) {
         item.innerHTML = '';
       });
-
-      return this;
     },
 
     html: function() {
@@ -191,19 +180,15 @@
     },
 
     on: function(eventName, listener) {
-      this.each(function(i, item) {
+      return this.each(function(i, item) {
         item.addEventListener(eventName, listener);
       });
-
-      return this;
     },
 
     off: function(eventName, listener) {
-      this.each(function(i, item) {
+      return this.each(function(i, item) {
         item.removeEventListener(eventName, listener);
       });
-
-      return this;
     },
 
     trigger: function(eventName, data) {
@@ -214,8 +199,9 @@
         newEvent = document.createEvent('CustomEvent');
         newEvent.initCustomEvent(eventName, true, true, data);
       }
-
       this.get(0).dispatchEvent(newEvent);
+
+      return this;
     },
 
     ready: function(fn) {
@@ -224,37 +210,28 @@
       } else {
         document.addEventListener('DOMContentLoaded', fn);
       }
+
       return this;
     },
 
     append: function(childEl) {
       childEl = getElFromInput(childEl);
-      this.each(function(i, item) {
+      return this.each(function(i, item) {
         item.appendChild(childEl);
       });
-
-      return this;
     },
 
     prepend: function(childEl) {
       childEl = getElFromInput(childEl);
-      this.each(function(i, item) {
+      return this.each(function(i, item) {
         item.insertBefore(childEl, item.firstChild);
       });
-
-      return this;
     },
 
     is: function(selector) {
-      if (this.length === 0) {
-        return false;
-      }
-
-      var isCurry = function(item) {
+      return this.length > 0 && this.every(function(item) {
         return (item.matches || item.matchesSelector || item.msMatchesSelector || item.mozMatchesSelector || item.webkitMatchesSelector || item.oMatchesSelector).call(item, selector);
-      };
-
-      return Array.prototype.every.call(this.getEl(), isCurry);
+      });
     }
   };
 
