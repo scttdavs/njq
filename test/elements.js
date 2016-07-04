@@ -255,4 +255,20 @@ describe("Query Elements", function() {
     var njqBar = njq("#foo").data("bar", "nope");
     expect(njqBar.data("bar")).to.equal("nope");
   });
+
+  it("gets a value", function() {
+    var foo = createElement("input", FOO);
+    foo.setAttribute("value", FOO);
+    addToDocument(foo);
+
+    expect(njq("#foo").val()).to.equal(FOO);
+  });
+
+  it("sets a value", function() {
+    var foo = createElement("input", FOO);
+    foo.setAttribute("value", FOO);
+    addToDocument(foo);
+    var njqBar = njq("#foo").val(BAR);
+    expect(njqBar.val()).to.equal(BAR);
+  });
 });

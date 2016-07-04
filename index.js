@@ -239,11 +239,11 @@
 
     // Check the reqs for this
     data: function(attr, value) {
-      if (value) {
-        return this.attr("data-" + attr, value);
-      }
+      return this.attr("data-" + attr, value);
+    },
 
-      return this.attr("data-"+ attr);
+    val: function(value) {
+      return this.attr("value", value);
     }
   };
 

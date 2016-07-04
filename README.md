@@ -157,6 +157,13 @@ foo.attr("data-bar"); // bar
 foo.attr("data-bar", "fooBar");
 ```
 
+#### val
+```javascript
+var foo = njq("#foo"); // <input id="foo" type="text" value="foo" />
+foo.val(); // foo
+foo.val("bar"); // bar
+```
+
 #### data
 ```javascript
 var foo = njq(".foo"); // <div class="foo" data-bar="bar"></div>
