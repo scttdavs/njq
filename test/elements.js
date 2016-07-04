@@ -239,4 +239,20 @@ describe("Query Elements", function() {
 
     expect(njq("#foo").is(".foo")).to.be.true;
   });
+
+  it("gets a data attribute", function() {
+    var foo = createElement("div", FOO);
+    foo.setAttribute("data-bar", "bar");
+    addToDocument(foo);
+
+    expect(njq("#foo").data("bar")).to.equal("bar");
+  });
+
+  it("sets a data attribute", function() {
+    var foo = createElement("div", FOO);
+    foo.setAttribute("data-bar", "bar");
+    addToDocument(foo);
+    var njqBar = njq("#foo").data("bar", "nope");
+    expect(njqBar.data("bar")).to.equal("nope");
+  });
 });

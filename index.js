@@ -169,7 +169,12 @@
       return this.get(0).innerHTML;
     },
 
-    attr: function(attr) {
+    attr: function(attr, value) {
+      if (value) {
+        return this.each(function(i, item) {
+          item.setAttribute(attr, value);
+        });
+      }
       return this.get(0).getAttribute(attr);
     },
 
@@ -230,6 +235,15 @@
       return this.length > 0 && this.every(function(item) {
         return (item.matches || item.matchesSelector || item.msMatchesSelector || item.mozMatchesSelector || item.webkitMatchesSelector || item.oMatchesSelector).call(item, selector);
       });
+    },
+
+    // Check the reqs for this
+    data: function(attr, value) {
+      if (value) {
+        return this.attr("data-" + attr, value);
+      }
+
+      return this.attr("data-"+ attr);
     }
   };
 

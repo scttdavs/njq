@@ -154,6 +154,14 @@ var foo = njq(".foo").prepend("<p>bar</p>"); // <div class="foo"><p>bar</p>stuff
 ```javascript
 var foo = njq(".foo"); // <div class="foo" data-bar="bar"></div>
 foo.attr("data-bar"); // bar
+foo.attr("data-bar", "fooBar");
+```
+
+#### data
+```javascript
+var foo = njq(".foo"); // <div class="foo" data-bar="bar"></div>
+foo.data("bar"); // bar
+foo.data("bar", "newBar");
 ```
 
 #### css
