@@ -1,5 +1,7 @@
 # No jQuery
 
+[![Build Status](https://travis-ci.org/scttdavs/njq.svg?branch=master)](https://travis-ci.org/scttdavs/njq)
+
 No jQuery - an alternative vanillia js implementation of jQuery's most used features. Code taken from youmightnotneedjquery.com
 
 1. [Install](#install)
