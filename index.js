@@ -200,6 +200,16 @@
       return getComputedStyle(this.get(0))[rule];
     },
 
+    width: function(value) {
+      if (value) {
+        return this.each(function(i, item) {
+          item.style["width"] = value;
+        });
+      }
+
+      return this.get(0).getBoundingClientRect().width;
+    },
+
     on: function(eventName, listener) {
       return this.each(function(i, item) {
         item.addEventListener(eventName, listener);

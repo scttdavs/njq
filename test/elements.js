@@ -293,4 +293,19 @@ describe("Query Elements", function() {
     var njqBar = njq("#foo").css("display", "none").toggle();
     expect(njqBar.css("display")).to.not.equal("none");
   });
+
+  it("gets the width", function() {
+    var foo = createElement("input", FOO);
+    addToDocument(foo);
+    var njqBar = njq("#foo").css("width", "100px").css("box-sizing", "border-box");
+    expect(njqBar.width()).to.equal(100);
+  });
+
+  it("sets the width", function() {
+    var foo = createElement("input", FOO);
+    addToDocument(foo);
+    var njqBar = njq("#foo").css("width", "100px").css("box-sizing", "border-box");
+    njqBar.width("200px");
+    expect(njqBar.width()).to.equal(200);
+  });
 });

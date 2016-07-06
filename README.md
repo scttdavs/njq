@@ -116,6 +116,13 @@ var foo = njq(".foo"); // <div class="foo">stuff</div>
 foo.toggle(); // <div class="foo" style="display: none;">stuff</div>
 ```
 
+#### width
+```javascript
+var foo = njq(".foo"); // <div class="foo">stuff</div>
+foo.width("100px"); // <div class="foo" style="width: 100px;">stuff</div>
+foo.width(); // 100
+```
+
 #### each
 ```javascript
 var foo = njq(".foo");
