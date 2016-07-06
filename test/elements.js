@@ -160,6 +160,14 @@ describe("Query Elements", function() {
     expect(foo.css("color")).to.equal("rgb(0, 0, 0)");
   });
 
+  it("sets a css rule", function() {
+    var el = createElement("div", FOO);
+    addToDocument(el);
+
+    var foo = njq("#foo").css("border-radius", "50%");
+    expect(foo.css("border-radius")).to.equal("50%");
+  });
+
   it("appends to a parent", function() {
     var foo = createElement("div", FOO);
     var bar = createElement("div", BAR);
@@ -270,5 +278,19 @@ describe("Query Elements", function() {
     addToDocument(foo);
     var njqBar = njq("#foo").val(BAR);
     expect(njqBar.val()).to.equal(BAR);
+  });
+
+  it("toggles an element", function() {
+    var foo = createElement("input", FOO);
+    addToDocument(foo);
+    var njqBar = njq("#foo").toggle();
+    expect(njqBar.css("display")).to.equal("none");
+  });
+
+  it("toggles an element", function() {
+    var foo = createElement("input", FOO);
+    addToDocument(foo);
+    var njqBar = njq("#foo").css("display", "none").toggle();
+    expect(njqBar.css("display")).to.not.equal("none");
   });
 });

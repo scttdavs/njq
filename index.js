@@ -21,6 +21,13 @@
     }
   };
 
+  var camelCase = function(str) {
+    return str.replace(/^([A-Z])|\s(\w)/g, function(match, p1, p2, offset) {
+        if (p2) return p2.toUpperCase();
+        return p1.toLowerCase();
+    });
+  }
+
   var getElFromInput = function(input) {
     if (typeof input === "string") {
       var tmp = document.implementation.createHTMLDocument();
@@ -147,6 +154,12 @@
       });
     },
 
+    toggle: function() {
+      return this.each(function(i, item) {
+        item.style.display = item.style.display === "none" ? "" : "none";
+      });
+    },
+
     show: function() {
       return this.each(function(i, item) {
         item.style.display = "";
@@ -178,7 +191,12 @@
       return this.get(0).getAttribute(attr);
     },
 
-    css: function(rule) {
+    css: function(rule, value) {
+      if (value) {
+        return this.each(function(i, item) {
+          item.style[camelCase(rule)] = value;
+        });
+      }
       return getComputedStyle(this.get(0))[rule];
     },
 

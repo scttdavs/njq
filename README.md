@@ -110,6 +110,12 @@ foo.toggleClass("bar"); //
 foo.hasClass("bar"); // true
 ```
 
+#### toggle
+```javascript
+var foo = njq(".foo"); // <div class="foo">stuff</div>
+foo.toggle(); // <div class="foo" style="display: none;">stuff</div>
+```
+
 #### each
 ```javascript
 var foo = njq(".foo");
@@ -177,6 +183,7 @@ foo.data("bar", "newBar");
 ```javascript
 var foo = njq(".foo"); // <div class="foo" style="color: red;"></div>
 foo.css("color"); // red
+foo.css("color", "blue"); // blue
 ```
 
 ### Events
