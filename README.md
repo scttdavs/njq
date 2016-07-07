@@ -123,6 +123,13 @@ foo.width("100px"); // <div class="foo" style="width: 100px;">stuff</div>
 foo.width(); // 100
 ```
 
+#### height
+```javascript
+var foo = njq(".foo"); // <div class="foo">stuff</div>
+foo.height("100px"); // <div class="foo" style="height: 100px;">stuff</div>
+foo.height(); // 100
+```
+
 #### each
 ```javascript
 var foo = njq(".foo");

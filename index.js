@@ -214,6 +214,16 @@
       return this.get(0).getBoundingClientRect().width;
     },
 
+    height: function(value) {
+      if (value) {
+        return this.each(function(i, item) {
+          item.style["height"] = pxOrInt(value);
+        });
+      }
+
+      return this.get(0).getBoundingClientRect().height;
+    },
+
     on: function(eventName, listener) {
       return this.each(function(i, item) {
         item.addEventListener(eventName, listener);

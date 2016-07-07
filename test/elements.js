@@ -309,4 +309,20 @@ describe("Query Elements", function() {
     expect(njqBar.width()).to.equal(200);
     expect(njqBar.css("width")).to.equal("200px");
   });
+
+  it("gets the height", function() {
+    var foo = createElement("input", FOO);
+    addToDocument(foo);
+    var njqBar = njq("#foo").css("height", "100px").css("box-sizing", "border-box");
+    expect(njqBar.height()).to.equal(100);
+  });
+
+  it("sets the height", function() {
+    var foo = createElement("input", FOO);
+    addToDocument(foo);
+    var njqBar = njq("#foo").css("height", "100px").css("box-sizing", "border-box");
+    njqBar.height(200);
+    expect(njqBar.height()).to.equal(200);
+    expect(njqBar.css("height")).to.equal("200px");
+  });
 });
