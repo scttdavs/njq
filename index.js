@@ -44,6 +44,16 @@
     return input;
   };
 
+  var setHeightOrWidth = function(rule, value) {
+    if (value) {
+      return this.each(function(i, item) {
+        item.style[rule] = pxOrInt(value);
+      });
+    }
+
+    return this.get(0).getBoundingClientRect()[rule];
+  };
+
   var wrappedElProto = {
     get: function(index) {
       if (this.getEl().length) {
@@ -158,6 +168,12 @@
       });
     },
 
+    display: function(value) {
+      return this.each(function(i, item) {
+        item.style.display = value;
+      });
+    },
+
     toggle: function() {
       return this.each(function(i, item) {
         item.style.display = item.style.display === "none" ? "" : "none";
@@ -165,15 +181,11 @@
     },
 
     show: function() {
-      return this.each(function(i, item) {
-        item.style.display = "";
-      });
+      return this.display("");
     },
 
     hide: function() {
-      return this.each(function(i, item) {
-        item.style.display = "none";
-      });
+      return this.display("none");
     },
 
     empty: function() {
@@ -205,23 +217,11 @@
     },
 
     width: function(value) {
-      if (value) {
-        return this.each(function(i, item) {
-          item.style["width"] = pxOrInt(value);
-        });
-      }
-
-      return this.get(0).getBoundingClientRect().width;
+      return setHeightOrWidth.call(this, "width", value);
     },
 
     height: function(value) {
-      if (value) {
-        return this.each(function(i, item) {
-          item.style["height"] = pxOrInt(value);
-        });
-      }
-
-      return this.get(0).getBoundingClientRect().height;
+      return setHeightOrWidth.call(this, "height", value);
     },
 
     on: function(eventName, listener) {
