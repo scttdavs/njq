@@ -305,7 +305,8 @@ describe("Query Elements", function() {
     var foo = createElement("input", FOO);
     addToDocument(foo);
     var njqBar = njq("#foo").css("width", "100px").css("box-sizing", "border-box");
-    njqBar.width("200px");
+    njqBar.width(200);
     expect(njqBar.width()).to.equal(200);
+    expect(njqBar.css("width")).to.equal("200px");
   });
 });

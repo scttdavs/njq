@@ -26,7 +26,11 @@
         if (p2) return p2.toUpperCase();
         return p1.toLowerCase();
     });
-  }
+  };
+
+  var pxOrInt = function(value) {
+    return (value^0) === value ? value + "px" : value;
+  };
 
   var getElFromInput = function(input) {
     if (typeof input === "string") {
@@ -38,7 +42,7 @@
     }
 
     return input;
-  }
+  };
 
   var wrappedElProto = {
     get: function(index) {
@@ -203,7 +207,7 @@
     width: function(value) {
       if (value) {
         return this.each(function(i, item) {
-          item.style["width"] = value;
+          item.style["width"] = pxOrInt(value);
         });
       }
 
