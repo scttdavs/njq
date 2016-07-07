@@ -308,6 +308,18 @@
     return wrappedEl(document.querySelectorAll(selector));
   };
 
+  njq.map = function(items, callback) {
+    Array.prototype.map.call(items, callback);
+  };
+
+  njq.each = function(items, callback) {
+    Array.prototype.each.call(items, function(el, i) {
+      callback(i, el);
+    });
+  };
+
+  njq.support = {}; // bootstrap
+
   njq.getJSON = function(string, callback) {
     var request = new XMLHttpRequest();
     request.open('GET', string, true);
