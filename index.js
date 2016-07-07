@@ -54,6 +54,57 @@
     return this.get(0).getBoundingClientRect()[rule];
   };
 
+  var pseudoSelectors = {
+    last: function(items) {
+      return items[items.length - 1];
+    }
+  };
+
+  var hasPseudo = function(selector) {
+    return selector.indexOf(":") > -1;
+  }
+
+  var getPseudoSelector = function(selector) {
+    var selectors = selector.split(' ');
+    console.log("SELECTORS", selectors);
+    if (selectors.length === 1 && hasPseudo(selectors[0])) {
+      var sels = selectors[0].split(":");
+      var sel = sels[0];
+      var pseudo = sels[1];
+      var items = document.querySelectorAll(sel);
+      if (pseudo) {
+        console.log("PSEUDO");
+        // will always be one, so wrap in array
+        items = [pseudoSelectors[pseudo](items)];
+      }
+      return items;
+    } else if (selectors.length === 1){
+      return document.querySelectorAll(selectors[0]);
+    }
+    var results;
+    selectors.forEach(function(sel) {
+      console.log("CURR", sel);
+      if (hasPseudo(sel)) {
+        var sels = sel.split(":");
+        sel = sels[0];
+        var pseudo = sels[1];
+      }
+      console.log("RESULTS", results);
+      if (results) {
+        console.log("SEL", sel);
+        results = results.querySelectorAll(sel);
+      } else {
+        results = document.querySelectorAll(sel)
+      }
+      if (pseudo) {
+        console.log("PSEUDO");
+        results = pseudoSelectors[pseudo](results);
+      }
+    });
+
+    return results;
+  };
+
   var wrappedElProto = {
     get: function(index) {
       if (this.getEl().length) {
@@ -115,6 +166,9 @@
 
     find: function(selector) {
       return this.queryEach(function(item) {
+        if (selector.indexOf(":") > -1) {
+          return getPseudoSelector(item, selector);
+        }
         return item.querySelectorAll(selector);
       });
     },
@@ -305,9 +359,15 @@
     if (selector === document || selector === window) {
       return wrappedEl(selector);
     }
+
+    if (hasPseudo(selector)) {
+      return wrappedEl(getPseudoSelector(selector));
+    }
+
     return wrappedEl(document.querySelectorAll(selector));
   };
 
+  // TODO tests for map and each
   njq.map = function(items, callback) {
     Array.prototype.map.call(items, callback);
   };
