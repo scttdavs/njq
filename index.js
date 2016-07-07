@@ -46,8 +46,8 @@
 
   var setHeightOrWidth = function(rule, value) {
     if (value) {
-      return this.each(function(i, item) {
-        item.style[rule] = pxOrInt(value);
+      return this.each(function() {
+        this.style[rule] = pxOrInt(value);
       });
     }
 
@@ -63,9 +63,11 @@
     },
 
     each: function(func) {
-      Array.prototype.forEach.call(this.getEl(), function(el, i) {
-        func(i, el);
-      });
+      var els = this.getEl();
+      for(var i = 0; i < this.length; i++) {
+        func.call(els[i], i);
+      }
+
       return this;
     },
 
@@ -130,31 +132,31 @@
     },
 
     addClass: function(className) {
-      return this.each(function(i, item) {
-        if (item.classList) {
-          item.classList.add(className);
+      return this.each(function() {
+        if (this.classList) {
+          this.classList.add(className);
         } else {
-          item.className += ' ' + className;
+          this.className += ' ' + className;
         }
       });
     },
 
     removeClass: function(className) {
-      return this.each(function(i, item) {
-        if (item.classList) {
-          item.classList.remove(className);
+      return this.each(function() {
+        if (this.classList) {
+          this.classList.remove(className);
         } else {
-          item.className = item.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+          this.className = this.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
         }
       });
     },
 
     toggleClass: function(className) {
-      return this.each(function(i, item) {
-        if (item.classList) {
-          item.classList.toggle(className);
+      return this.each(function() {
+        if (this.classList) {
+          this.classList.toggle(className);
         } else {
-          var classes = item.className.split(' ');
+          var classes = this.className.split(' ');
           var existingIndex = classes.indexOf(className);
 
           if (existingIndex >= 0) {
@@ -163,20 +165,20 @@
             classes.push(className);
           }
 
-          item.className = classes.join(' ');
+          this.className = classes.join(' ');
         }
       });
     },
 
     display: function(value) {
-      return this.each(function(i, item) {
-        item.style.display = value;
+      return this.each(function() {
+        this.style.display = value;
       });
     },
 
     toggle: function() {
-      return this.each(function(i, item) {
-        item.style.display = item.style.display === "none" ? "" : "none";
+      return this.each(function() {
+        this.style.display = this.style.display === "none" ? "" : "none";
       });
     },
 
@@ -189,8 +191,8 @@
     },
 
     empty: function() {
-      return this.each(function(i, item) {
-        item.innerHTML = '';
+      return this.each(function() {
+        this.innerHTML = '';
       });
     },
 
@@ -200,8 +202,8 @@
 
     attr: function(attr, value) {
       if (value) {
-        return this.each(function(i, item) {
-          item.setAttribute(attr, value);
+        return this.each(function() {
+          this.setAttribute(attr, value);
         });
       }
       return this.get(0).getAttribute(attr);
@@ -209,8 +211,8 @@
 
     css: function(rule, value) {
       if (value) {
-        return this.each(function(i, item) {
-          item.style[camelCase(rule)] = value;
+        return this.each(function() {
+          this.style[camelCase(rule)] = value;
         });
       }
       return getComputedStyle(this.get(0))[rule];
@@ -225,14 +227,14 @@
     },
 
     on: function(eventName, listener) {
-      return this.each(function(i, item) {
-        item.addEventListener(eventName, listener);
+      return this.each(function() {
+        this.addEventListener(eventName, listener);
       });
     },
 
     off: function(eventName, listener) {
-      return this.each(function(i, item) {
-        item.removeEventListener(eventName, listener);
+      return this.each(function() {
+        this.removeEventListener(eventName, listener);
       });
     },
 
@@ -261,15 +263,15 @@
 
     append: function(childEl) {
       childEl = getElFromInput(childEl);
-      return this.each(function(i, item) {
-        item.appendChild(childEl);
+      return this.each(function() {
+        this.appendChild(childEl);
       });
     },
 
     prepend: function(childEl) {
       childEl = getElFromInput(childEl);
-      return this.each(function(i, item) {
-        item.insertBefore(childEl, item.firstChild);
+      return this.each(function() {
+        this.insertBefore(childEl, this.firstChild);
       });
     },
 

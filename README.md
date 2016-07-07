@@ -59,6 +59,13 @@ var foo = njq("#foo");
 foo.find("#bar").length; // some number
 ```
 
+#### each
+```javascript
+var foo = njq("#foo").each(function(i) { // <div id="foo">foo</div>
+  console.log(njq(this).text()); // foo
+});
+```
+
 #### find
 ```javascript
 var foo = njq("#foo");
