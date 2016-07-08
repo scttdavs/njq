@@ -50,7 +50,6 @@ describe("Query Selectors", function() {
     addToDocument(foo);
 
     var foos = njq("#foo:last a");
-    console.log("RETURN", foos.getEl());
     expect(foos.hasClass(BAR)).to.be.true;
     expect(foos.length).to.equal(1);
   });

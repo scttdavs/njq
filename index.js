@@ -60,49 +60,19 @@
     }
   };
 
-  var hasPseudo = function(selector) {
-    return selector.indexOf(":") > -1;
-  }
-
   var getPseudoSelector = function(selector) {
     var selectors = selector.split(' ');
-    console.log("SELECTORS", selectors);
-    if (selectors.length === 1 && hasPseudo(selectors[0])) {
-      var sels = selectors[0].split(":");
-      var sel = sels[0];
-      var pseudo = sels[1];
-      var items = document.querySelectorAll(sel);
-      if (pseudo) {
-        console.log("PSEUDO");
-        // will always be one, so wrap in array
-        items = [pseudoSelectors[pseudo](items)];
-      }
-      return items;
-    } else if (selectors.length === 1){
-      return document.querySelectorAll(selectors[0]);
-    }
     var results;
     selectors.forEach(function(sel) {
-      console.log("CURR", sel);
-      if (hasPseudo(sel)) {
-        var sels = sel.split(":");
-        sel = sels[0];
-        var pseudo = sels[1];
-      }
-      console.log("RESULTS", results);
-      if (results) {
-        console.log("SEL", sel);
-        results = results.querySelectorAll(sel);
-      } else {
-        results = document.querySelectorAll(sel)
-      }
-      if (pseudo) {
-        console.log("PSEUDO");
-        results = pseudoSelectors[pseudo](results);
+      var sels = sel.split(":");
+      results = results ? results.querySelectorAll(sels[0]) : document.querySelectorAll(sels[0]);
+
+      if (sels[1]) {
+        results = pseudoSelectors[sels[1]](results);
       }
     });
 
-    return results;
+    return results.length === undefined ? [results] : results;;
   };
 
   var wrappedElProto = {
@@ -360,7 +330,8 @@
       return wrappedEl(selector);
     }
 
-    if (hasPseudo(selector)) {
+    // has pseudo selector
+    if (selector.indexOf(":") > -1) {
       return wrappedEl(getPseudoSelector(selector));
     }
 
