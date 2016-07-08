@@ -57,6 +57,10 @@
   var pseudoSelectors = {
     last: function(items) {
       return items[items.length - 1];
+    },
+
+    first: function(items) {
+      return items[0];
     }
   };
 

@@ -53,4 +53,33 @@ describe("Query Selectors", function() {
     expect(foos.hasClass(BAR)).to.be.true;
     expect(foos.length).to.equal(1);
   });
+
+  it("gets the first element", function() {
+    var el = createElement("div", FOO);
+    var foo = createElement("div", FOO);
+    el.className = "foo";
+    addToDocument(el);
+    addToDocument(foo);
+
+    var foos = njq("#foo:first");
+    expect(foos.hasClass(FOO)).to.be.true;
+    expect(foos.length).to.equal(1);
+  });
+
+  it("gets the first element with complex selector", function() {
+    var a = createElement("a", BAR);
+    var b = createElement("a", BAR);
+    var el = createElement("div", FOO);
+    var foo = createElement("div", FOO);
+    foo.className = FOO;
+    a.className = BAR
+    el.appendChild(a);
+    foo.appendChild(b);
+    addToDocument(el);
+    addToDocument(foo);
+
+    var foos = njq("#foo:first a");
+    expect(foos.hasClass(BAR)).to.be.true;
+    expect(foos.length).to.equal(1);
+  });
 });
