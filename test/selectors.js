@@ -82,4 +82,19 @@ describe("Query Selectors", function() {
     expect(foos.hasClass(BAR)).to.be.true;
     expect(foos.length).to.equal(1);
   });
+
+  // it("gets the visible elements", function() {
+  //   var el = createElement("div", BAR);
+  //   var foo = createElement("div", FOO);
+  //   var bar = createElement("div", BAR);
+  //   foo.style.visibility = "hidden";
+  //   el.style.opacity = 0;
+  //   addToDocument(el);
+  //   addToDocument(foo);
+  //   addToDocument(bar);
+  //
+  //   var foos = njq("div:visible");
+  //   expect(foos.hasClass(FOO)).to.be.true;
+  //   expect(foos.length).to.equal(1);
+  // });
 });

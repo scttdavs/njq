@@ -13,6 +13,34 @@
   };
   NjqError.prototype = Object.create(NjqError.prototype);
 
+  var slice = Array.prototype.slice;
+
+  var flatten = function(arr, final) {
+    final = final || [];
+    arr.forEach(function(i) {
+      if (Array.isArray(i)) {
+        final = final.concat(flatten(i));
+      } else {
+        final.push(i);
+      }
+    });
+    return final;
+  };
+
+  var isDomElement = function(o) {
+    return (
+      typeof Node === "object" ? o instanceof Node :
+      o && typeof o === "object" && typeof o.nodeType === "number" && typeof o.nodeName==="string"
+    ) || (
+      typeof HTMLElement === "object" ? o instanceof HTMLElement : //DOM2
+      o && typeof o === "object" && o !== null && o.nodeType === 1 && typeof o.nodeName==="string"
+    );
+  };
+
+  var isDomCollection = function(obj) {
+      return HTMLCollection.prototype.isPrototypeOf(obj) || NodeList.prototype.isPrototypeOf(obj);
+  };
+
   var hasClass = function(item, className) {
     if (item.classList) {
       return item.classList.contains(className);
@@ -56,11 +84,11 @@
 
   var pseudoSelectors = {
     last: function(items) {
-      return items[items.length - 1];
+      return items.last().get(0);
     },
 
     first: function(items) {
-      return items[0];
+      return items.first().get(0);
     }
   };
 
@@ -69,10 +97,11 @@
     var results;
     selectors.forEach(function(sel) {
       var sels = sel.split(":");
-      results = results ? results.querySelectorAll(sels[0]) : document.querySelectorAll(sels[0]);
+      results = results ? results.find(sels[0]) : njq(sels[0]);
 
       if (sels[1]) {
-        results = pseudoSelectors[sels[1]](results);
+        var r = pseudoSelectors[sels[1]](results);
+        results = njq(r);
       }
     });
 
@@ -92,7 +121,7 @@
       for(var i = 0; i < this.length; i++) {
         func.call(els[i], i);
       }
-
+      
       return this;
     },
 
@@ -105,7 +134,7 @@
     },
 
     queryEach: function(func) {
-      return wrappedEl(this.map(func));
+      return njq(flatten(this.map(func)));
     },
 
     hasClass: function(className) {
@@ -135,16 +164,25 @@
         });
       }
 
-      return wrappedEl(children);
+      return njq(children);
     },
 
     find: function(selector) {
       return this.queryEach(function(item) {
-        if (selector.indexOf(":") > -1) {
-          return getPseudoSelector(item, selector);
-        }
-        return item.querySelectorAll(selector);
+        // TODO fix this
+        // if (selector.indexOf(":") > -1) {
+        //   return getPseudoSelector(selector);
+        // }
+        return slice.call(item.querySelectorAll(selector));
       });
+    },
+
+    first: function() {
+      return njq(this.get(0));
+    },
+
+    last: function() {
+      return njq(this.get(this.length - 1));
     },
 
     next: function() {
@@ -292,14 +330,14 @@
     append: function(childEl) {
       childEl = getElFromInput(childEl);
       return this.each(function() {
-        this.appendChild(childEl);
+        this.appendChild(childEl.cloneNode(true));
       });
     },
 
     prepend: function(childEl) {
       childEl = getElFromInput(childEl);
       return this.each(function() {
-        this.insertBefore(childEl, this.firstChild);
+        this.insertBefore(childEl.cloneNode(true), this.firstChild);
       });
     },
 
@@ -319,28 +357,36 @@
     }
   };
 
-  function wrappedEl(el) {
-    var obj = Object.create(wrappedElProto);
-    obj.getEl = function() {
+  function WrappedEl(el) {
+    this.getEl = function() {
       return el;
     };
-    obj.length = el.length;
-
-    return obj;
+    this.length = el.length;
   }
 
   var njq = function(selector) {
     if (selector === document || selector === window) {
-      return wrappedEl(selector);
+      return new WrappedEl(selector);
+    }
+
+    if (isDomElement(selector)) {
+      return new WrappedEl([selector]);
+    }
+
+    if (Array.isArray(selector) || isDomCollection(selector)) {
+      return new WrappedEl(selector);
     }
 
     // has pseudo selector
     if (selector.indexOf(":") > -1) {
-      return wrappedEl(getPseudoSelector(selector));
+      return getPseudoSelector(selector);
     }
 
-    return wrappedEl(document.querySelectorAll(selector));
+    return new WrappedEl(document.querySelectorAll(selector));
   };
+
+  njq.fn = WrappedEl.prototype = wrappedElProto;
+
 
   // TODO tests for map and each
   njq.map = function(items, callback) {
