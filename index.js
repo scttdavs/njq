@@ -4,8 +4,11 @@
   else if (typeof module != 'undefined') module.exports = definition();
   else context[name] = definition();
 }('$', this, function () {
-  'use strict';
 
+
+  var emptyArray = [];
+  var isArray = Array.isArray ||
+      function(object) { return object instanceof Array };
   var errorReachedMsg = "NjqError: Server reached, but returned an error";
   var errorNotReachedMsg = "NjqError: Connection error, server not reached";
   var NjqError = function(message) {
@@ -13,12 +16,10 @@
   };
   NjqError.prototype = Object.create(NjqError.prototype);
 
-  var slice = Array.prototype.slice;
-
   var flatten = function(arr, final) {
     final = final || [];
     arr.forEach(function(i) {
-      if (Array.isArray(i)) {
+      if (isArray(i)) {
         final = final.concat(flatten(i));
       } else {
         final.push(i);
@@ -89,6 +90,13 @@
 
     first: function(items) {
       return items.first().get(0);
+    },
+
+    visible: function(items) {
+      return items.filter(function(el) {
+        var computedStyle = getComputedStyle(el);
+        return !(parseFloat(computedStyle.opacity) === 0 || computedStyle.visibility === "hidden");
+      })
     }
   };
 
@@ -97,44 +105,60 @@
     var results;
     selectors.forEach(function(sel) {
       var sels = sel.split(":");
-      results = results ? results.find(sels[0]) : njq(sels[0]);
+      results = results ? results.find(sels[0]) : $(sels[0]);
 
       if (sels[1]) {
-        var r = pseudoSelectors[sels[1]](results);
-        results = njq(r);
+        results = $(pseudoSelectors[sels[1]](results));
       }
     });
 
     return results.length === undefined ? [results] : results;;
   };
 
-  var wrappedElProto = {
-    get: function(index) {
-      if (this.getEl().length) {
-        return this.getEl()[index];
-      }
-      return this.getEl();
-    },
+  var $ = function(selector) {
+    return njq.init(selector);
+  };
 
-    each: function(func) {
-      var els = this.getEl();
-      for(var i = 0; i < this.length; i++) {
-        func.call(els[i], i);
+  $.fn = {
+    constructor: N,
+    length: 0,
+    forEach: emptyArray.forEach,
+    reduce: emptyArray.reduce,
+    push: emptyArray.push,
+    sort: emptyArray.sort,
+    splice: emptyArray.splice,
+    indexOf: emptyArray.indexOf,
+    slice: emptyArray.slice,
+
+    get: function(index) {
+      if (this.length) {
+        return this[index];
       }
-      
       return this;
     },
 
+    each: function(func) {
+      this.forEach(function(el, i) {
+        func.call(el, i);
+      });
+
+      return this;
+    },
+
+    filter: function(func) {
+      return emptyArray.filter.call(this, func);
+    },
+
     every: function(func) {
-      return Array.prototype.every.call(this.getEl(), func);
+      return emptyArray.every.call(this, func);
     },
 
     map: function(func) {
-      return Array.prototype.map.call(this.getEl(), func);
+      return emptyArray.map.call(this, func);
     },
 
     queryEach: function(func) {
-      return njq(flatten(this.map(func)));
+      return $(flatten(this.map(func)));
     },
 
     hasClass: function(className) {
@@ -148,7 +172,7 @@
         return this.get(0).textContent;
       }
 
-      return Array.prototype.reduce.call(this.getEl(), function(previous, currentEl) {
+      return emptyArray.reduce.call(this, function(previous, currentEl) {
         return currentEl.textContent + currentEl.textContent;
       });
     },
@@ -164,7 +188,7 @@
         });
       }
 
-      return njq(children);
+      return $(children);
     },
 
     find: function(selector) {
@@ -173,16 +197,16 @@
         // if (selector.indexOf(":") > -1) {
         //   return getPseudoSelector(selector);
         // }
-        return slice.call(item.querySelectorAll(selector));
+        return emptyArray.slice.call(item.querySelectorAll(selector));
       });
     },
 
     first: function() {
-      return njq(this.get(0));
+      return $(this.get(0));
     },
 
     last: function() {
-      return njq(this.get(this.length - 1));
+      return $(this.get(this.length - 1));
     },
 
     next: function() {
@@ -357,51 +381,49 @@
     }
   };
 
-  function WrappedEl(el) {
-    this.getEl = function() {
-      return el;
-    };
-    this.length = el.length;
-  }
-
-  var njq = function(selector) {
-    if (selector === document || selector === window) {
-      return new WrappedEl(selector);
-    }
-
-    if (isDomElement(selector)) {
-      return new WrappedEl([selector]);
-    }
-
-    if (Array.isArray(selector) || isDomCollection(selector)) {
-      return new WrappedEl(selector);
-    }
-
-    // has pseudo selector
-    if (selector.indexOf(":") > -1) {
-      return getPseudoSelector(selector);
-    }
-
-    return new WrappedEl(document.querySelectorAll(selector));
+  var N = function(dom, selector) {
+    var i, len = dom ? dom.length : 0
+    for (i = 0; i < len; i++) this[i] = dom[i]
+    this.length = len
+    this.selector = selector || ''
   };
 
-  njq.fn = WrappedEl.prototype = wrappedElProto;
+  var njq = {};
 
+  njq.init = function(selector) {
+    var ret;
+
+    if (selector === document || selector === window) {
+      ret = [selector];
+    } else if (isDomElement(selector)) {
+      ret = [selector];
+    } else if (isArray(selector) || isDomCollection(selector)) {
+      ret = emptyArray.slice.call(selector);
+    } else if (selector.indexOf(":") > -1) {
+      ret = getPseudoSelector(selector);
+    } else {
+      ret = document.querySelectorAll(selector);
+    }
+
+    return new N(ret, selector);
+  };
+
+  N.prototype = $.fn
 
   // TODO tests for map and each
-  njq.map = function(items, callback) {
-    Array.prototype.map.call(items, callback);
+  $.map = function(items, callback) {
+    emptyArray.map.call(items, callback);
   };
 
-  njq.each = function(items, callback) {
-    Array.prototype.each.call(items, function(el, i) {
+  $.each = function(items, callback) {
+    emptyArray.each.call(items, function(el, i) {
       callback(i, el);
     });
   };
 
-  njq.support = {}; // bootstrap
+  $.support = {}; // bootstrap
 
-  njq.getJSON = function(string, callback) {
+  $.getJSON = function(string, callback) {
     var request = new XMLHttpRequest();
     request.open('GET', string, true);
 
@@ -422,7 +444,7 @@
     request.send();
   };
 
-  njq.ajax = function(options) {
+  $.ajax = function(options) {
     var request = new XMLHttpRequest();
     request.open(options.type, options.url, true);
     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
@@ -445,5 +467,5 @@
     request.send(options.data);
   };
 
-  return njq;
+  return $;
 });
