@@ -93,7 +93,7 @@
     },
 
     visible: function(items) {
-      return items.filter(function(el) {
+      return emptyArray.filter.call(items, function(el) {
         var computedStyle = getComputedStyle(el);
         return !(parseFloat(computedStyle.opacity) === 0 || computedStyle.visibility === "hidden");
       })
@@ -128,7 +128,7 @@
     sort: emptyArray.sort,
     splice: emptyArray.splice,
     indexOf: emptyArray.indexOf,
-    slice: emptyArray.slice,
+    every: emptyArray.every,
 
     get: function(index) {
       if (this.length) {
@@ -137,25 +137,35 @@
       return this;
     },
 
-    each: function(func) {
-      this.forEach(function(el, i) {
-        func.call(el, i);
+    each: function(callback){
+      this.every(function(el, id){
+        return callback.call(el, id, el) !== false
       });
 
-      return this;
+      return this
     },
 
-    filter: function(func) {
-      return emptyArray.filter.call(this, func);
-    },
+    // TODO tests
+    // filter: function(selector){
+    //   if (isFunction(selector)) return this.not(this.not(selector))
+    //   return $(filter.call(this, function(element){
+    //     return this.is(element, selector)
+    //   }))
+    // },
 
-    every: function(func) {
-      return emptyArray.every.call(this, func);
-    },
+    // TODO tests
+    // map: function(func){
+    //   return $($.map(this, function(el, i) { return func.call(el, i, el) }));
+    // },
 
     map: function(func) {
       return emptyArray.map.call(this, func);
     },
+
+    // TODO tests
+    // slice: function(){
+    //   return $(emptyArray.slice.apply(this, arguments))
+    // },
 
     queryEach: function(func) {
       return $(flatten(this.map(func)));
@@ -411,15 +421,15 @@
   N.prototype = $.fn
 
   // TODO tests for map and each
-  $.map = function(items, callback) {
-    emptyArray.map.call(items, callback);
-  };
-
-  $.each = function(items, callback) {
-    emptyArray.each.call(items, function(el, i) {
-      callback(i, el);
-    });
-  };
+  // $.map = function(items, callback) {
+  //   emptyArray.map.call(items, callback);
+  // };
+  //
+  // $.each = function(items, callback) {
+  //   emptyArray.each.call(items, function(el, i) {
+  //     callback(i, el);
+  //   });
+  // };
 
   $.support = {}; // bootstrap
 
